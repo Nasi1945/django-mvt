@@ -1,0 +1,74 @@
+Table user{
+  id int pk
+  username char
+  password char
+  first_name char
+  last_name char
+  email char
+  is_staff bool
+  is_active bool
+  is_superuser bool
+}
+
+Table trainers{
+  id int pk
+  user fk ////user
+  skills mmk ///skills
+  content char
+  image image
+  twitter char
+  facebook char
+  instagram char
+  linkedin char
+  status bool
+  created_at datetime
+  updated_at datetime
+}
+
+Table skills{
+  id int pk
+  name char 
+  created_at datetime
+  updated_at datetime
+}
+
+Table courses{
+  id int pk
+  name char
+  trainers fk /////trainers
+  category mmk ////category
+  fee float 
+  capacity int
+  image image
+  schedule datetime
+  content char
+  status bool
+  created_at datetime
+  updated_at datetime
+}
+
+Table category{
+  id int pk
+  name char
+  content char
+  created_at datetime
+  updated_at datetime
+}
+
+Table events{
+  id int pk
+  image image
+  name char
+  schedule datetime
+  content char 
+  status bool
+  created_at datetime
+  updated_at datetime
+}
+Ref: "trainers"."user" < "user"."id"
+
+Ref: "trainers"."skills" < "skills"."id"
+
+Ref: "courses"."trainers" < "trainers"."id"
+
+Ref: "courses"."category" < "category"."id"
