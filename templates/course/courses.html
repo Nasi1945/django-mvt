@@ -31,6 +31,10 @@
     <section id="courses" class="courses section">
 
       <div class="container">
+        <form>
+          <input type="text" name="search">
+          <button type="submit" class="btn_primary">search</button>
+        </form>
 
         <div class="row">
           {% for cours in course%}
@@ -42,15 +46,15 @@
                   {% for cat in cours.category.all %}
                   <p class="category">{{cat.name}}</p>
                   {% endfor %}
-                  <p class="price">{{cours.fee}}</p>
+                  <p class="price"><a href={% url 'course:course_price' price=cours.fee %}>{{cours.fee}}</a></p>
                 </div>
 
-                <h3><a href={% url 'course:details' %}>{{cours.name}}</a></h3>
+                <h3><a href={% url 'course:course_details' id=cours.id %}>{{cours.name}}</a></h3>
                 <p class="description">{{cours.content}}</p>
                 <div class="trainer d-flex justify-content-between align-items-center">
                   <div class="trainer-profile d-flex align-items-center">
                     <img src={{cours.trainers.image.url}} class="img-fluid" alt="">
-                    <a href="" class="trainer-link">{{cours.trainers.user.username}}</a>
+                    <a href={% url 'course:course_trainer' trainer=cours.trainers.user.username %} class="trainer-link">{{cours.trainers.user.username}}</a>
                   </div>
                   <div class="trainer-rank d-flex align-items-center">
                     <i class="bi bi-person user-icon"></i>&nbsp;{{cours.capacity}}
