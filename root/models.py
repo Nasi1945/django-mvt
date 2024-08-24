@@ -28,3 +28,19 @@ class Events(models.Model):
     
     class Meta:
         ordering = ('created_at',)
+
+
+class Newsletter(models.Model):
+    email = models.EmailField(unique=True)
+    
+    def __str__(self):
+        return self.email
+    
+class Contactus(models.Model):
+    name = models.CharField(max_length=120)
+    email = models.EmailField()
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    
+    def __str__(self):
+        return self.email

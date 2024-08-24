@@ -68,7 +68,13 @@
           {% endfor %}
 
         </div>
-
+        {% if course.has_previous %}
+        <a href="?page={{course.previous_page_number}}"><</a>
+        {% endif %}
+        <p>{{page_number}}</p>
+        {% if course.has_next %}
+        <a href="?page={{course.next_page_number}}">></a>
+        {% endif %}
       </div>
 
     </section><!-- /Courses Section -->
