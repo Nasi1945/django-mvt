@@ -86,28 +86,63 @@
           </div>
           <div class="col-lg-9 mt-4 mt-lg-0">
             <div class="tab-content">
-              {% for cat in cours.category.all %}
-              <div class="tab-pane" id="tab-5">
+              <div class="tab-pane active show" id="tab-1">
                 <div class="row">
+                  {% for cat in cours.category.all %}
                   <div class="col-lg-8 details order-2 order-lg-1">
                     <h3>{{cat.name}}</h3>
-                    <p class="fst-italic"></p>
                     <p>{{cat.content}}</p>
                   </div>
+                  {% endfor %}
                   <div class="col-lg-4 text-center order-1 order-lg-2">
-                    <img src="{% static 'assets/img/tabs/tab-5.png'%}" alt="" class="img-fluid">
+                    <img src="{% static 'assets/img/tabs/tab-1.png' %}" alt="" class="img-fluid">
                   </div>
                 </div>
               </div>
+              <div class="tab-pane" id="tab-3">
+                <div class="row">
+                  <div class="col-lg-4 text-center order-1 order-lg-2">
+                    <img src="{% static 'assets/img/tabs/tab-3.png' %}" alt="" class="img-fluid">
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane" id="tab-4">
+                <div class="row">
+                  <div class="col-lg-4 text-center order-1 order-lg-2">
+                    <img src="{% static 'assets/img/tabs/tab-4.png' %}" alt="" class="img-fluid">
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane" id="tab-5">
+                <div class="row">
+                  <div class="col-lg-4 text-center order-1 order-lg-2">
+                    <img src="{% static 'assets/img/tabs/tab-5.png' %}" alt="" class="img-fluid">
+                  </div>
+                </div>
+              </div>
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="course" value={{cours.id}}>
+                <p>Your username-----:-<input type="text" name="name"></p>
+                <p>Your comment--:-<input type="text" name="message"></p>
+                <button type="submit">submit comment</button>
+              </form>
+              {% if messages %}
+              {% for message in messages %}
+              {{ message }}
               {% endfor %}
+              {% endif %}
             </div>
           </div>
+          {% for comment in comments %}
+            <p>{{comment.name}}</p>
+            <p style='color:red;'><a href = {% url 'course:edit_comment' id=comment.id %}>{{comment.message}}</a></p>
+          {% endfor %}
         </div>
-
       </div>
 
     </section><!-- /Tabs Section -->
-
+          
   </main>
 
   {% endblock 'content' %}
