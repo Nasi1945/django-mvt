@@ -31,14 +31,17 @@ def contact(request):
     if request.method == 'GET':
         return render(request,'root/contact.html')
     elif request.method == 'POST':
-        form = Contactusform(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.add_message(request,messages.SUCCESS,'we recieve your message and will answer you soon')
-            return redirect(request.path_info)
+        if request.user.is_authenticated:
+            form = Contactusform(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.add_message(request,messages.SUCCESS,'we recieve your message and will answer you soon')
+                return redirect(request.path_info)
+            else:
+                messages.add_message(request,messages.ERROR,'please try again')
+                return redirect('root:contact')
         else:
-            messages.add_message(request,messages.ERROR,'please try again')
-            return redirect('root:contact')
+            return redirect('accounts:login')
 
 def about(request):
     return render(request,'root/about.html')
