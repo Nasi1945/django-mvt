@@ -123,7 +123,7 @@
               <form method="post">
                 {% csrf_token %}
                 <input type="hidden" name="course" value={{cours.id}}>
-                <p>Your username-----:-<input type="text" name="name"></p>
+                <input type="hidden" name="name" value={{request.user.id}}>
                 <p>Your comment--:-<input type="text" name="message"></p>
                 <button type="submit">submit comment</button>
               </form>
@@ -137,6 +137,12 @@
           {% for comment in comments %}
             <p>{{comment.name}}</p>
             <p style='color:red;'><a href = {% url 'course:edit_comment' id=comment.id %}>{{comment.message}}</a></p>
+            <p style='color:blue;'><a href = {% url 'course:reply_comment' id=comment.id %}>reply</a></p>
+          {% for repl in reply %}
+            <p>{{repl.name}}</p>
+            <p style='color:red;'><a href = {% url 'course:edit_comment' id=repl.id %}>{{repl.message}}</a></p>
+            <p style='color:blue;'><a href = {% url 'course:reply_comment' id=comment.id %}>reply</a></p>
+          {% endfor %}
           {% endfor %}
         </div>
       </div>

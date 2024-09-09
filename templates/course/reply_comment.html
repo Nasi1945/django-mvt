@@ -1,0 +1,12 @@
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="comment" value={{comment.id}}>
+    <input type="hidden" name="name" value={{request.user.id}}>
+    <p>Your comment--:-<input type="text" name="message"></p>
+    <button type="submit">submit comment</button>
+  </form>
+  {% if messages %}
+  {% for message in messages %}
+  {{ message }}
+  {% endfor %}
+  {% endif %}

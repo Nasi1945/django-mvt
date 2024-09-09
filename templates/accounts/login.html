@@ -3,8 +3,8 @@
     {{form.as_p}}
     <button type="submit">login</button>
 </form>
-<p style='color:blue;'><a href = '#'>havent signup yet</a></p>
-<p style='color:red;'><a href = '#'>i have forgot my password</a></p>
+<p style='color:blue;'><a href = {% url 'accounts:signup' %}>havent signup yet</a></p>
+<p style='color:red;'><a href ={% url 'accounts:reset_password' %}>i have forgot my password</a></p>
 
 {% if messages %}
 {% for message in messages %}

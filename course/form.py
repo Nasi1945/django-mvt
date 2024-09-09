@@ -1,7 +1,12 @@
 from django import forms
-from .models import Comment
+from .models import Comment,Reply
 
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['course','name','message']
+        
+class ReplyForm(forms.ModelForm):
+    class Meta:
+        model = Reply
+        fields = ['comment','name','message']

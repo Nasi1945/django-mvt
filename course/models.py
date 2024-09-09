@@ -67,11 +67,21 @@ class Courses(models.Model):
         
 class Comment(models.Model):
     course = models.ForeignKey(Courses,on_delete=models.CASCADE)
-    name = models.CharField(max_length=120)
+    name = models.ForeignKey(User,on_delete=models.CASCADE)
     message = models.TextField()
     statue = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return self.name
+        return self.name.username
+    
+class Reply(models.Model):
+    comment = models.ForeignKey(Comment,on_delete=models.CASCADE)
+    name = models.ForeignKey(User,on_delete=models.CASCADE)
+    message = models.TextField()
+    statue = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.name.username
     

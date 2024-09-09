@@ -11,4 +11,5 @@ urlpatterns = [
     path('details/<int:id>',course_details , name = 'course_details'),
     path('trainers/',trainers , name = 'trainers'),
     path('comment/<int:id>',edit_comment,name='edit_comment'),
+    path('reply/<int:id>',reply_comment,name='reply_comment'),
 ]

@@ -1,12 +1,12 @@
 from django.shortcuts import render, get_object_or_404,redirect
-from .models import Courses,Trainers,Comment
+from .models import Courses,Trainers,Comment,Reply
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from .form import CommentForm
+from .form import CommentForm,ReplyForm
 from django.contrib import messages
 
-def courses(requests,**kwargs):
-    if requests.GET.get('search') is not None:
-        course = Courses.objects.filter(content__contains = requests.GET.get('search'))
+def courses(request,**kwargs):
+    if request.GET.get('search') is not None:
+        course = Courses.objects.filter(content__contains = request.GET.get('search'))
     elif kwargs.get('catname'):
         course = Courses.objects.filter(category__name = kwargs.get('catname'))
     elif kwargs.get('trainer'):
@@ -18,7 +18,7 @@ def courses(requests,**kwargs):
     
     course = Paginator(course, 2)
     try:
-        page_number = requests.GET.get('page')
+        page_number = request.GET.get('page')
         course = course.get_page(page_number)
     except EmptyPage:
         course = course.get_page(1)
@@ -29,49 +29,73 @@ def courses(requests,**kwargs):
         'course' : course,
         'page_number' : page_number,
     }
-    return render(requests,'course/courses.html',context=context)
+    return render(request,'course/courses.html',context=context)
 
-def trainers(requests):
+def trainers(request):
     trainer = Trainers.objects.filter(status = True)
     context = {
         'trainer' : trainer
     }
-    return render(requests,'course/trainers.html',context=context)
+    return render(request,'course/trainers.html',context=context)
 
-def course_details(requests , id):
-    if requests.method == 'GET':
+def course_details(request , id):
+    if request.method == 'GET':
         cours = get_object_or_404(Courses,id=id)
         comments = Comment.objects.filter(statue = True,course = cours)
+        reply = Reply.objects.filter(statue = True)
         context = {
             'cours':cours,
-            'comments' : comments,    
+            'comments' : comments,
+            'reply':reply,    
         }
-        return render(requests,'course/course-details.html',context=context)
-    elif requests.method == 'POST':
-        form = CommentForm(requests.POST)
-        if form.is_valid():
-            form.save()
-            messages.add_message(requests,messages.SUCCESS,'your comment have been sent')
-            return redirect(requests.path_info)
+        return render(request,'course/course-details.html',context=context)
+    elif request.method == 'POST':
+        if request.user.is_authenticated:
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.add_message(request,messages.SUCCESS,'your comment have been sent')
+                return redirect(request.path_info)
+            else:
+                messages.add_message(request,messages.ERROR,'please try again')
+                return redirect(request.path_info)
         else:
-            messages.add_message(requests,messages.ERROR,'please try again')
-            return redirect(requests.path_info)
+            return redirect('accounts:login')
 
-def edit_comment(requests,id):
+def edit_comment(request,id):
     comment = get_object_or_404(Comment,id = id)
-    if requests.method == 'GET':
+    if request.method == 'GET':
         form = CommentForm(instance=comment)
         context = {
             'form' : form,
         }
-        return render(requests,'course/edit_comment.html',context=context)
-    elif requests.method == 'POST':
-        form = CommentForm(requests.POST, instance=comment)
+        return render(request,'course/edit_comment.html',context=context)
+    elif request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.statue = False
             comment.save()
             return redirect('course:course')
         else:
-            messages.add_message(requests,messages.ERROR,'please try again')
-            return redirect(requests.path_info)
+            messages.add_message(request,messages.ERROR,'please try again')
+            return redirect(request.path_info)
+        
+def reply_comment(request,id):
+    comments = get_object_or_404(Comment,id = id)
+    if request.method == 'GET':
+        form = ReplyForm()
+        context = {
+            'comments':comments,
+            'form':form,
+        }
+        return render(request,'course/reply_comment.html',context=context)
+    elif request.method == 'POST':
+        if request.user.is_authenticated:
+            form = ReplyForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('course:course')
+            else:
+                messages.add_message(request,messages.ERROR,'please try again')
+                return redirect(request.path_info)
