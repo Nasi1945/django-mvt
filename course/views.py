@@ -99,3 +99,6 @@ def reply_comment(request,id):
             else:
                 messages.add_message(request,messages.ERROR,'please try again')
                 return redirect(request.path_info)
+        else:
+            return redirect('accounts:login')
+    

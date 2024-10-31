@@ -30,7 +30,7 @@ class Trainers(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='trainers',default= 'unknown.jpg')
     skills = models.ManyToManyField(Skills)
-    content = models.TextField('good teacher')
+    content = models.TextField(default='good teacher')
     twitter = models.CharField(max_length= 120,blank=True,null=True)
     instagram = models.CharField(max_length= 120,blank=True,null=True)
     facebook = models.CharField(max_length= 120,blank=True,null=True)

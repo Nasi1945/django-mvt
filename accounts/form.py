@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=120)
+    username_or_email = forms.CharField(max_length=120)
     password = forms.CharField(max_length=120,widget=forms.PasswordInput)
     
 class SignupForm(UserCreationForm):

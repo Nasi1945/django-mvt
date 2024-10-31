@@ -18,15 +18,28 @@ def login_view(request):
     elif request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(username = username,password=password)
-            if user is not None:
-                login(request,user)
-                return redirect('/')
+            username = form.cleaned_data['username_or_email']
+            if '@' in username:
+                user = get_object_or_404(User,email = username)
+                name = user.username
+                password = form.cleaned_data['password']
+                user = authenticate(username =name,password=password)
+                if user is not None:
+                    login(request,user)
+                    return redirect('/')
+                else:
+                    messages.add_message(request,messages.ERROR,'please enter your data in correct way')
+                    return redirect(request.path_info)
             else:
-                messages.add_message(request,messages.ERROR,'please enter your data in correct way')
-                return redirect(request.path_info)
+                username = form.cleaned_data['username_or_email']
+                password = form.cleaned_data['password']
+                user = authenticate(username = username,password=password)
+                if user is not None:
+                    login(request,user)
+                    return redirect('/')
+                else:
+                    messages.add_message(request,messages.ERROR,'please enter your data in correct way')
+                    return redirect(request.path_info)
         else:
             messages.add_message(request,messages.ERROR,'maybe you are not signup')
             
